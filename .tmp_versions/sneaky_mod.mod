@@ -1,2 +1,2 @@
-/home/vcm/ece650/homework5-kit/sneaky_mod.ko
-/home/vcm/ece650/homework5-kit/sneaky_mod.o
+/home/vcm/ece650/rootkit/sneaky_mod.ko
+/home/vcm/ece650/rootkit/sneaky_mod.o

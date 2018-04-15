@@ -17,7 +17,7 @@ __attribute__((section(".gnu.linkonce.this_module"))) = {
 static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
-	{ 0x3d6976bf, __VMLINUX_SYMBOL_STR(module_layout) },
+	{ 0xb6fd8534, __VMLINUX_SYMBOL_STR(module_layout) },
 	{ 0x4488ae17, __VMLINUX_SYMBOL_STR(param_ops_charp) },
 	{ 0x4c9d28b0, __VMLINUX_SYMBOL_STR(phys_base) },
 	{ 0xdb7305a1, __VMLINUX_SYMBOL_STR(__stack_chk_fail) },
@@ -28,6 +28,7 @@ __attribute__((section("__versions"))) = {
 	{ 0x349cba85, __VMLINUX_SYMBOL_STR(strchr) },
 	{ 0x1e6d26a8, __VMLINUX_SYMBOL_STR(strstr) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
+	{ 0x2ea2c95c, __VMLINUX_SYMBOL_STR(__x86_indirect_thunk_rax) },
 	{ 0xbdfb6dbb, __VMLINUX_SYMBOL_STR(__fentry__) },
 };
 
